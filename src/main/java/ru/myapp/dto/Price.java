@@ -45,6 +45,19 @@ public class Price {
         return id;
     }
 
+    public Price() {
+    }
+
+    public Price(long id, String productCode, int number, int depart, Date begin, Date end, long value) {
+        this.id = id;
+        this.productCode = productCode;
+        this.number = number;
+        this.depart = depart;
+        this.begin = begin;
+        this.end = end;
+        this.value = value;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
