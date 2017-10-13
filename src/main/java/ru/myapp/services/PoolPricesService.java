@@ -15,9 +15,11 @@ public class PoolPricesService {
         for (Price price : listExistingPrices) {
             List<Price> listNewPriceInTimePrice = getListNewPriceInTimePrice(price, listNewPrices);
             if (listNewPriceInTimePrice != null) {
-                updatePrice(price, listNewPriceInTimePrice);
-            }
-            if (price != null) {
+                List<Price> updatedPrices = updatePrice(price, listNewPriceInTimePrice);
+                if (!updatedPrices.isEmpty()) {
+                    poolPrices.addAll(updatedPrices);
+                }
+            } else {
                 poolPrices.add(price);
             }
 
@@ -26,22 +28,25 @@ public class PoolPricesService {
         return poolPrices;
     }
 
+
     /**
      * Обновить существующую цену(удалить или изменить begin и end)
-     *
-     * @param price
+     *  @param price
      * @param listNewPriceInTimePrice
      */
-    private void updatePrice(Price price, List<Price> listNewPriceInTimePrice) {
+    private List<Price> updatePrice(Price price, List<Price> listNewPriceInTimePrice) {
+        List<Price> updatedPrices = new ArrayList<Price>();
+        updatedPrices.add(price);
         Collections.sort(listNewPriceInTimePrice, new Comparator<Price>() {
             public int compare(Price o1, Price o2) {
                 return o1.getBegin().compareTo(o2.getBegin());
             }
         });
 
-        for (Price newPrice: listNewPriceInTimePrice) {
+        for (Price newPrice : listNewPriceInTimePrice) {
 
         }
+        return updatedPrices;
     }
 
     /**
