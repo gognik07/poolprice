@@ -24,7 +24,7 @@ public class PoolPricesService {
             }
 
         }
-
+        poolPrices.addAll(listNewPrices);
         return poolPrices;
     }
 
@@ -170,7 +170,7 @@ public class PoolPricesService {
 
         return (beginNewPrice >= beginPrice && endNewPrice <= endPrice) ||
                 (beginNewPrice <= beginPrice && endNewPrice >= endPrice) ||
-                (beginNewPrice <= beginPrice && endNewPrice >= endPrice) ||
+                (beginNewPrice <= beginPrice && endNewPrice >= beginPrice) ||
                 (beginNewPrice <= endPrice && endNewPrice >= endPrice);
     }
 
