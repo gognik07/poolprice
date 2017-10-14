@@ -44,6 +44,7 @@ public class PoolPricesServiceTest {
         listExistingPrices.add(new Price(5L, "555555", 5, 5, new Date("12/10/2017"), new Date("12/15/2017"), 555555));
         listExistingPrices.add(new Price(6L, "555555", 5, 5, new Date("12/15/2017"), new Date("12/20/2017"), 565656));
         listExistingPrices.add(new Price(7L, "777777", 7, 7, new Date("12/01/2017"), new Date("12/30/2017"), 777777));
+        listExistingPrices.add(new Price(9L, "999999", 9, 9, new Date("12/05/2017"), new Date("12/15/2017"), 999999));
         return listExistingPrices;
     }
 
@@ -55,6 +56,9 @@ public class PoolPricesServiceTest {
         listNewPrices.add(new Price(4L, "333333", 3, 3, new Date("11/12/2017"), new Date("11/17/2017"), 343434));
         listNewPrices.add(new Price(5L, "555555", 5, 5, new Date("12/12/2017"), new Date("12/17/2017"), 55665566));
         listNewPrices.add(new Price(7L, "777777", 7, 7, new Date("11/01/2017"), new Date("01/30/2018"), 789789));
+        listNewPrices.add(new Price(9L, "999999", 9, 9, new Date("12/01/2017"), new Date("12/06/2017"), 999999));
+        listNewPrices.add(new Price(9L, "999999", 9, 9, new Date("12/08/2017"), new Date("12/10/2017"), 999999));
+        listNewPrices.add(new Price(9L, "999999", 9, 9, new Date("12/13/2017"), new Date("12/20/2017"), 999999));
         return listNewPrices;
     }
 }

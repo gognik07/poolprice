@@ -24,8 +24,32 @@ public class PoolPricesService {
             }
 
         }
-        poolPrices.addAll(listNewPrices);
+        addNewPricesInPoolPrices(poolPrices, listNewPrices);
         return poolPrices;
+    }
+
+    private void addNewPricesInPoolPrices(List<Price> poolPrices, List<Price> listNewPrices) {
+        for (Price newPrice : listNewPrices) {
+            if (!hasNewPrice(newPrice, poolPrices)) {
+                poolPrices.add(newPrice);
+            }
+        }
+    }
+
+    /**
+     * Метод проверяет, есть новая цена в существующих
+     *
+     * @param newPrice
+     * @param poolPrices
+     * @return
+     */
+    private boolean hasNewPrice(Price newPrice, List<Price> poolPrices) {
+        for (Price existingPrice: poolPrices) {
+            if (isNewPriceWithinExistingPrice(newPrice, existingPrice)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -51,16 +75,27 @@ public class PoolPricesService {
             }
 
             if(isNewPriceInBeginExistingPrice(newPrice, actualExistingPrice)) {
+                if (newPrice.getValue() == actualExistingPrice.getValue()) {
+                    actualExistingPrice.setBegin(newPrice.getBegin());
+                    continue;
+                }
                 actualExistingPrice.setBegin(newPrice.getEnd());
                 continue;
             }
 
             if (isNewPriceInEndExistingPrice(newPrice, actualExistingPrice)) {
+                if (newPrice.getValue() == actualExistingPrice.getValue()) {
+                    actualExistingPrice.setEnd(newPrice.getEnd());
+                    continue;
+                }
                 actualExistingPrice.setEnd(newPrice.getBegin());
                 break;
             }
 
             if (isNewPriceWithinExistingPrice(newPrice, actualExistingPrice)) {
+                if (newPrice.getValue() == actualExistingPrice.getValue()) {
+                    continue;
+                }
                 Date endExistingPrice = actualExistingPrice.getEnd();
                 actualExistingPrice.setEnd(newPrice.getBegin());
                 Price addingPrice = new Price(actualExistingPrice);
@@ -85,7 +120,7 @@ public class PoolPricesService {
         long newPriceTimeEnd = newPrice.getEnd().getTime();
         long existingPriceTimeEnd = existingPrice.getEnd().getTime();
         long existingPriceTimeBegin = existingPrice.getBegin().getTime();
-        return newPriceTimeBegin > existingPriceTimeBegin && newPriceTimeEnd < existingPriceTimeEnd;
+        return newPriceTimeBegin >= existingPriceTimeBegin && newPriceTimeEnd <= existingPriceTimeEnd;
     }
 
     /**
