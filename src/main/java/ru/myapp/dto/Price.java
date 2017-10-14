@@ -58,6 +58,16 @@ public class Price {
         this.value = value;
     }
 
+    public Price(Price price) {
+        this.id = price.id;
+        this.productCode = price.productCode;
+        this.number = price.number;
+        this.depart = price.depart;
+        this.begin = price.begin;
+        this.end = price.end;
+        this.value = price.value;
+    }
+
     public void setId(long id) {
         this.id = id;
     }

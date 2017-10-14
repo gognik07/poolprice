@@ -44,9 +44,95 @@ public class PoolPricesService {
         });
 
         for (Price newPrice : listNewPriceInTimePrice) {
+            Price actualExistingPrice = getActualExistingPrice(updatedPrices);
+            if (isNewPriceCoversFullTimeExistingPrice(newPrice, actualExistingPrice)) {
+                updatedPrices.remove(actualExistingPrice);
+                break;
+            }
 
+            if(isNewPriceInBeginExistingPrice(newPrice, actualExistingPrice)) {
+                actualExistingPrice.setBegin(newPrice.getEnd());
+                continue;
+            }
+
+            if (isNewPriceInEndExistingPrice(newPrice, actualExistingPrice)) {
+                actualExistingPrice.setEnd(newPrice.getBegin());
+                break;
+            }
+
+            if (isNewPriceWithinExistingPrice(newPrice, actualExistingPrice)) {
+                Date endExistingPrice = actualExistingPrice.getEnd();
+                actualExistingPrice.setEnd(newPrice.getBegin());
+                Price addingPrice = new Price(actualExistingPrice);
+                addingPrice.setBegin(newPrice.getEnd());
+                addingPrice.setEnd(endExistingPrice);
+                updatedPrices.add(addingPrice);
+                continue;
+            }
         }
         return updatedPrices;
+    }
+
+    /**
+     * Метод проверяет входит ли диапазон новой цены в диапазон существующей
+     *
+     * @param newPrice
+     * @param existingPrice
+     * @return
+     */
+    private boolean isNewPriceWithinExistingPrice(Price newPrice, Price existingPrice) {
+        long newPriceTimeBegin = newPrice.getBegin().getTime();
+        long newPriceTimeEnd = newPrice.getEnd().getTime();
+        long existingPriceTimeEnd = existingPrice.getEnd().getTime();
+        long existingPriceTimeBegin = existingPrice.getBegin().getTime();
+        return newPriceTimeBegin > existingPriceTimeBegin && newPriceTimeEnd < existingPriceTimeEnd;
+    }
+
+    /**
+     * Проверяет временной диапазон новой цены полностью покрывает диапазон существующей
+     *
+     * @param newPrice
+     * @param existingPrice
+     * @return
+     */
+    private boolean isNewPriceCoversFullTimeExistingPrice(Price newPrice, Price existingPrice) {
+        long newPriceTimeBegin = newPrice.getBegin().getTime();
+        long newPriceTimeEnd = newPrice.getEnd().getTime();
+        long existingPriceTimeEnd = existingPrice.getEnd().getTime();
+        long existingPriceTimeBegin = existingPrice.getBegin().getTime();
+        return newPriceTimeBegin <= existingPriceTimeBegin && newPriceTimeEnd >= existingPriceTimeEnd;
+    }
+
+    /**
+     * Проверяет новая цена входит в конец существующей цены
+     *
+     * @param newPrice
+     * @param existingPrice
+     * @return
+     */
+    private boolean isNewPriceInEndExistingPrice(Price newPrice, Price existingPrice) {
+        long newPriceTimeBegin = newPrice.getBegin().getTime();
+        long newPriceTimeEnd = newPrice.getEnd().getTime();
+        long existingPriceTimeEnd = existingPrice.getEnd().getTime();
+        return newPriceTimeBegin <= existingPriceTimeEnd && newPriceTimeEnd >= existingPriceTimeEnd;
+    }
+
+    /**
+     * Проверяет новая цена входит в начало существующей цены
+     *
+     * @param newPrice
+     * @param existingPrice
+     * @return
+     */
+    private boolean isNewPriceInBeginExistingPrice(Price newPrice, Price existingPrice) {
+        long newPriceTimeBegin = newPrice.getBegin().getTime();
+        long newPriceTimeEnd = newPrice.getEnd().getTime();
+        long existingPriceTimeBegin = existingPrice.getBegin().getTime();
+        return newPriceTimeBegin <= existingPriceTimeBegin && newPriceTimeEnd >= existingPriceTimeBegin;
+    }
+
+    private Price getActualExistingPrice(List<Price> listExistingPrice) {
+        return listExistingPrice.get(listExistingPrice.size() - 1);
     }
 
     /**
