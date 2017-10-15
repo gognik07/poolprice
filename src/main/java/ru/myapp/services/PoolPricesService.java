@@ -14,9 +14,9 @@ public class PoolPricesService {
     /**
      * Метод для объединения двух списков цен
      *
-     * @param listExistingPrices
-     * @param listNewPrices
-     * @return
+     * @param listExistingPrices Список существующих цен
+     * @param listNewPrices      Список новых цен
+     * @return Список объединенных цен
      */
     public List<Price> getPoolPrices(List<Price> listExistingPrices, List<Price> listNewPrices) throws ValidateException {
         ListPriceValidator.validateListPrice(listExistingPrices);
@@ -40,6 +40,12 @@ public class PoolPricesService {
         return poolPrices;
     }
 
+    /**
+     * Добавление новых цен в объединенный список цен
+     *
+     * @param poolPrices    Объединенный список цен
+     * @param listNewPrices Список новых цен
+     */
     private void addNewPricesInPoolPrices(List<Price> poolPrices, List<Price> listNewPrices) {
         for (Price newPrice : listNewPrices) {
             if (!hasNewPrice(newPrice, poolPrices)) {
@@ -49,14 +55,14 @@ public class PoolPricesService {
     }
 
     /**
-     * Метод проверяет, есть новая цена в существующих
+     * Метод проверяет, есть новая цена в объединенном списке цен
      *
-     * @param newPrice
-     * @param poolPrices
+     * @param newPrice   Новая цена
+     * @param poolPrices Список объединенных цен
      * @return
      */
     private boolean hasNewPrice(Price newPrice, List<Price> poolPrices) {
-        for (Price existingPrice: poolPrices) {
+        for (Price existingPrice : poolPrices) {
             if (isNewPriceWithinExistingPrice(newPrice, existingPrice)) {
                 return true;
             }
@@ -67,8 +73,9 @@ public class PoolPricesService {
 
     /**
      * Обновить существующую цену(удалить или изменить begin и end)
-     *  @param price
-     * @param listNewPriceInTimePrice
+     *
+     * @param price                   Цена для изменения
+     * @param listNewPriceInTimePrice Список новых цен, которые пересекаются во времени с ценой для изменения
      */
     private List<Price> updatePrice(Price price, List<Price> listNewPriceInTimePrice) {
         List<Price> updatedPrices = new ArrayList<Price>();
@@ -86,7 +93,7 @@ public class PoolPricesService {
                 break;
             }
 
-            if(isNewPriceInBeginExistingPrice(newPrice, actualExistingPrice)) {
+            if (isNewPriceInBeginExistingPrice(newPrice, actualExistingPrice)) {
                 if (newPrice.getValue() == actualExistingPrice.getValue()) {
                     actualExistingPrice.setBegin(newPrice.getBegin());
                     continue;
@@ -123,8 +130,8 @@ public class PoolPricesService {
     /**
      * Метод проверяет входит ли диапазон новой цены в диапазон существующей
      *
-     * @param newPrice
-     * @param existingPrice
+     * @param newPrice      Новая цена
+     * @param existingPrice Существующая цена
      * @return
      */
     private boolean isNewPriceWithinExistingPrice(Price newPrice, Price existingPrice) {
@@ -138,8 +145,8 @@ public class PoolPricesService {
     /**
      * Проверяет временной диапазон новой цены полностью покрывает диапазон существующей
      *
-     * @param newPrice
-     * @param existingPrice
+     * @param newPrice      Новая цена
+     * @param existingPrice Существующая цена
      * @return
      */
     private boolean isNewPriceCoversFullTimeExistingPrice(Price newPrice, Price existingPrice) {
@@ -153,8 +160,8 @@ public class PoolPricesService {
     /**
      * Проверяет новая цена входит в конец существующей цены
      *
-     * @param newPrice
-     * @param existingPrice
+     * @param newPrice      Новая цена
+     * @param existingPrice Существующая цена
      * @return
      */
     private boolean isNewPriceInEndExistingPrice(Price newPrice, Price existingPrice) {
@@ -167,8 +174,8 @@ public class PoolPricesService {
     /**
      * Проверяет новая цена входит в начало существующей цены
      *
-     * @param newPrice
-     * @param existingPrice
+     * @param newPrice      Новая цена
+     * @param existingPrice Существующая цена
      * @return
      */
     private boolean isNewPriceInBeginExistingPrice(Price newPrice, Price existingPrice) {

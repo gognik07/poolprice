@@ -10,6 +10,12 @@ import java.util.List;
  */
 public class ListPriceValidator {
 
+    /**
+     * Метод проверяет корректность списка цен
+     *
+     * @param listPrice Список цен
+     * @throws ValidateException
+     */
     public static void validateListPrice(List<Price> listPrice) throws ValidateException {
         for (int i = 0; i < listPrice.size() - 1; i++) {
             Price currentPrice = listPrice.get(i);
@@ -17,7 +23,7 @@ public class ListPriceValidator {
                 throw new ValidateException();
             }
             for (int j = i + 1; j < listPrice.size(); j++) {
-                if (isIntersectValue(currentPrice, listPrice.get(j))){
+                if (isIntersectValue(currentPrice, listPrice.get(j))) {
                     throw new ValidateException();
                 }
             }
@@ -31,7 +37,7 @@ public class ListPriceValidator {
     /**
      * Проверить временной диапазон цены(дата начала должна начинаться раньше даты окончания цены и они не должны быть равны)
      *
-     * @param price
+     * @param price проверяемая цена
      * @return
      */
     private static boolean isCorrectTimeRangePrice(Price price) {
@@ -44,7 +50,7 @@ public class ListPriceValidator {
      * Проверить пересекается ли время цен
      *
      * @param price1 цена 1
-     * @param price2 новая 2
+     * @param price2 цена 2
      * @return
      */
     private static boolean isIntersectValue(Price price1, Price price2) {

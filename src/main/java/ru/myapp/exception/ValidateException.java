@@ -1,7 +1,7 @@
 package ru.myapp.exception;
 
 /**
- * Created by Nikita on 15.10.2017.
+ * Исключение при ошибки валидации
  */
-public class ValidateException extends Exception{
+public class ValidateException extends Exception {
 }
