@@ -1,6 +1,8 @@
 package ru.myapp.services;
 
 import ru.myapp.dto.Price;
+import ru.myapp.exception.ValidateException;
+import ru.myapp.validators.ListPriceValidator;
 
 import java.util.*;
 
@@ -9,7 +11,17 @@ import java.util.*;
  */
 public class PoolPricesService {
 
-    public List<Price> getPoolPrices(List<Price> listExistingPrices, List<Price> listNewPrices) {
+    /**
+     * Метод для объединения двух списков цен
+     *
+     * @param listExistingPrices
+     * @param listNewPrices
+     * @return
+     */
+    public List<Price> getPoolPrices(List<Price> listExistingPrices, List<Price> listNewPrices) throws ValidateException {
+        ListPriceValidator.validateListPrice(listExistingPrices);
+        ListPriceValidator.validateListPrice(listNewPrices);
+
         List<Price> poolPrices = new ArrayList<Price>();
 
         for (Price price : listExistingPrices) {

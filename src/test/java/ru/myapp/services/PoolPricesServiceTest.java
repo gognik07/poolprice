@@ -7,10 +7,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import ru.myapp.dto.Price;
+import ru.myapp.exception.ValidateException;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Nikita on 12.10.2017.
@@ -25,16 +28,50 @@ public class PoolPricesServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Тестирование метода получения объединенного списка
+     *
+     * @throws ValidateException
+     */
     @Test
-    public void testGetPoolPrices() {
+    public void testGetPoolPrices() throws ValidateException {
+        //given
         List<Price> existingPrices = createListExistingPrices();
         List<Price> newPrices = createListNewPrices();
+
+        //when
         List<Price> poolPrices = service.getPoolPrices(existingPrices, newPrices);
-        for (Price price : poolPrices) {
-            System.out.println(price.getProductCode() + " " + price.getNumber() + " " + price.getDepart() + " " + price.getBegin() + " " + price.getEnd() + " " + price.getValue());
-        }
+
+        //then
+        assertNotNull(poolPrices);
+        assertFalse(poolPrices.isEmpty());
+        assertEquals(poolPrices.size(), 11);
     }
 
+    /**
+     * Тестирование метода получения объединенного списка при некорректном списке цен
+     *
+     * @throws ValidateException
+     */
+    @Test(expected = ValidateException.class)
+    public void testGetPoolPricesNotValidateListPrices() throws ValidateException {
+        //given
+        List<Price> existingPrices = new ArrayList<Price>();
+        existingPrices.add(new Price(1L, "111111", 1, 1, new Date("12/10/2017"), new Date("12/5/2017"), 111111));
+        List<Price> newPrices = createListNewPrices();
+
+        //when
+        List<Price> poolPrices = service.getPoolPrices(existingPrices, newPrices);
+
+        //then
+        assertNull(poolPrices);
+    }
+
+    /**
+     * Создать корректный список существующих цен
+     *
+     * @return корректный список существующих цен
+     */
     private List<Price> createListExistingPrices() {
         List<Price> listExistingPrices = new ArrayList<Price>();
         listExistingPrices.add(new Price(1L, "111111", 1, 1, new Date("10/15/2017"), new Date("10/25/2017"), 111111));
@@ -48,6 +85,11 @@ public class PoolPricesServiceTest {
         return listExistingPrices;
     }
 
+    /**
+     * Создать корректный список новых цен
+     *
+     * @return корректный список новых цен
+     */
     private List<Price> createListNewPrices() {
         List<Price> listNewPrices = new ArrayList<Price>();
         listNewPrices.add(new Price(8L, "888888", 8, 8, new Date("10/15/2017"), new Date("10/25/2017"), 888888));
