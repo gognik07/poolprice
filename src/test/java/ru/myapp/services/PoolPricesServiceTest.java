@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by Nikita on 12.10.2017.
+ * Тесты для сервиса объединения цен
  */
 public class PoolPricesServiceTest {
 
